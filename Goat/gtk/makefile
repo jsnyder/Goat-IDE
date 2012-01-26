@@ -99,7 +99,7 @@ ifeq ($(UNAME), Linux)
 LIBDL:=-ldl
 endif
 ifeq ($(UNAME), Darwin)
-CXXFLAGS:=$(CXXFLAGS) -Dunix
+CXXFLAGS:=$(CXXFLAGS) -Dunix -D__unix__
 endif
 
 .cxx.o:
