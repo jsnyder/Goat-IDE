@@ -15,12 +15,10 @@ class GTKMutex : public Mutex {
 
 private:
 	pthread_mutex_t mutex;
-	virtual void Lock() {pthread_mutex_lock( &mutex ); }
-	virtual void Unlock() {pthread_mutex_unlock( &mutex ); }
-	GTKMutex() {
-		mutex = PTHREAD_MUTEX_INITIALIZER;
-	}
-	virtual ~GTKMutex() {}
+	virtual void Lock() { pthread_mutex_lock( &mutex ); }
+	virtual void Unlock() { pthread_mutex_unlock( &mutex ); }
+	GTKMutex() { pthread_mutex_init( &mutex, 0 ); }
+	virtual ~GTKMutex() { pthread_mutex_destroy(&mutex); }
 	friend class Mutex;
 };
 

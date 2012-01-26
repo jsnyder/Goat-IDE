@@ -49,7 +49,7 @@ examplesdir=$(APPDIR)/examples
 
 INSTALL=install
 
-PROG_EXE = Goat 
+PROG_EXE = Goat
 PROG	 = ../bin/$(PROG_EXE)
 ELUAC	 = ../bin/eluac
 DFU-P	 = ../bin/dfu-programmer-0-5-4
@@ -97,6 +97,7 @@ CXXFLAGS:=$(CXXFLAGS) $(CXXTFLAGS) -Wno-long-long
 UNAME:=$(shell uname -s)
 ifeq ($(UNAME), Linux)
 LIBDL:=-ldl
+LDFLAGS = -Wl,--as-needed -Wl,--version-script lua.vers
 endif
 ifeq ($(UNAME), Darwin)
 CXXFLAGS:=$(CXXFLAGS) -Dunix -D__unix__
@@ -118,7 +119,7 @@ $(PROG): SciTEGTK.o GUIGTK.o Widget.o \
 FilePath.o SciTEBase.o FileWorker.o Cookie.o Credits.o SciTEBuffers.o SciTEIO.o StringList.o Exporters.o StringHelpers.o Uart.o Term.o\
 PropSetFile.o MultiplexExtension.o DirectorExtension.o SciTEProps.o StyleWriter.o Utf8_16.o \
 	JobQueue.o GTKMutex.o IFaceTable.o $(COMPLIB) $(LUA_OBJS)
-	$(CC) `$(CONFIGTHREADS)` -rdynamic -Wl,--as-needed -Wl,--version-script lua.vers -DGTK $^ -o $@ $(CONFIGLIB) $(LIBDL) -lstdc++
+	$(CC) `$(CONFIGTHREADS)` -rdynamic $(LDFLAGS)  -DGTK $^ -o $@ $(CONFIGLIB) $(LIBDL) -lstdc++
 
 # Automatically generate header dependencies with "make deps"
 include deps.mak
@@ -126,13 +127,13 @@ include deps.mak
 # The two last install commands will fail if Gnome is not installed or is not at $(prefix).
 # This just means no Goat in the Gnome Applications menu
 install:
-	$(INSTALL) -m 755 -d $(bindir) $(docdir) 
+	$(INSTALL) -m 755 -d $(bindir) $(docdir)
 	$(INSTALL) -m 777 -d $(propdir) $(examplesdir)
 
 	$(INSTALL) -m 755 $(PROG) $(bindir)
 	$(INSTALL) -m 755 $(ELUAC) $(bindir)
 	$(INSTALL) -m 755 $(DFU-P) $(bindir)
-	
+
 	for files in ../properties/*.*; \
 	do \
 		$(INSTALL) -m 777 $$files $(propdir); \
